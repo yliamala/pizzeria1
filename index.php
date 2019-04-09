@@ -3,17 +3,17 @@
 require_once('autoloader.php');
 try {
     // Create product
-    $pizza = new \app\product\pizza\Pizza('standard', 26);
-    $pizza->addIngredient(new \app\product\pizza\Ingredient('onions'));
-    $pizza->addIngredient(new \app\product\pizza\Ingredient('olives'));
+    $pizza = new \App\Product\pizza\Pizza('standard', 26);
+    $pizza->addIngredient(new \App\Product\pizza\Ingredient('onions'));
+    $pizza->addIngredient(new \App\Product\pizza\Ingredient('olives'));
 
-    $burger = new \app\product\burger\Burger('white', 'well done');
+    $burger = new \App\Product\burger\Burger('white', 'well done');
     $burger->addCheese()->addDoubleCutlet();
 
-    $drink = new \app\product\drink\Drink('coca-cola', 1);
+    $drink = new \App\Product\Drink\Drink(new \App\Product\Drink\StrategyFactory(),'coca-cola', 1);
 
 // Create cart
-    $cart = new \app\order\Cart();
+    $cart = new \App\Order\Cart();
 
 // Add product
     $cart->addItem($pizza, 4);
@@ -27,26 +27,26 @@ try {
 //$firstKey = $keys[0];
 //$cart->deleteProduct($cart->key());
 //print_r($order);
-    (new \app\order\PrintCart($cart))->printCart();
+    (new \App\Order\PrintCart($cart))->printCart();
 
 // Get address pizzeria
     echo 'Select Pizzeria: ' . "\n";
-    print_r(\app\pizzeria\Pizzeria::getPizzeriaList());
+    print_r(\App\pizzeria\Pizzeria::getPizzeriaList());
 
 // Create Order
-    $order = new \app\order\Order($cart, new \app\order\DefaultStrategy());
-    $order->setPizzeria(new \app\pizzeria\Pizzeria('City', true));
-    $payment = new \app\order\payment\Cash($order);
+    $order = new \App\Order\Order($cart, new \App\Order\Discount\DefaultStrategy());
+    $order->setPizzeria(new \App\pizzeria\Pizzeria('City', true));
+    $payment = new \App\Order\Payment\Cash($order);
     $order->setPayment($payment);
 
-    $cook = new \app\user\Cook('Piter');
+    $cook = new \App\user\Cook('Piter');
     $order->setCook($cook);
-    $manager = new \app\user\Manager('Michel');
+    $manager = new \App\user\Manager('Michel');
     $order->setManager($manager);
 
-    $surprise = new \app\order\SurpriseStrategy($order);
+    $surprise = new \App\Order\SurpriseStrategy($order);
     if ($surprise) {
-        $drink = new \app\product\drink\DrinkSurprise('coca-cola', 0.5);
+        $drink = new \App\Product\Drink\Drink(new \App\Product\Drink\FreeStrategyFactory(), 'coca-cola', 0.5);
         $order->getCart()->addItem($drink);
     }
 
@@ -55,13 +55,13 @@ try {
     echo 'Total amount: ' . $order->getTotalAmount() . "\n";
 
 // Save order
-    $vip = new \app\user\Vip('Julia', '09872227733');
-    (new \app\order\SaveOrder($order, new \app\order\ValidationMinTotal($order, $vip)))->save();
-    new \app\order\SendEmail($order);
+    $vip = new \App\user\Vip('Julia', '09872227733');
+    (new \App\Order\SaveOrder($order, new \App\Order\ValidationMinTotal($order, $vip)))->save();
+    new \App\Order\SendEmail($order);
 
 
-    $order->changeStatus($cook, \app\order\Order::CONFIRMED_STATUS);
-    $order->changeStatus($manager, \app\order\Order::DELIVERED_STATUS);
+    $order->changeStatus($cook, \App\Order\Order::CONFIRMED_STATUS);
+    $order->changeStatus($manager, \App\Order\Order::DELIVERED_STATUS);
     $vip->viewCurrentStatusOrder();
     $vip->viewHistoryOrder();
 
@@ -70,7 +70,7 @@ try {
 //print_r($order);exit;
 
 // Service
-    $service = new \app\service\HolidayParty('2019-03-24', 3, 'street', '0984777332');
+    $service = new \App\service\HolidayParty('2019-03-24', 3, 'street', '0984777332');
     print_r($service->getPrice());
 } catch (Exception $e) {
     echo "Error: " . $e->getMessage() . "\n";

@@ -19,7 +19,7 @@ class PrintCart
         $i = 1;
         $template = "%d . %s; Qty: %d; Unit Price: %g; Price: %g;\n";
         /** @var Item $item */
-        foreach ($this->cart->getItems() as $item) {
+        foreach ($this->cart as $item) {
             echo sprintf($template, $i, $item->getItem()->getName(), $item->getQuantity(),
                 $item->getItem()->getPrice(), $item->getItem()->getPrice() * $item->getQuantity());
             $i++;

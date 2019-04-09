@@ -44,22 +44,22 @@ class Cart implements CartInterface
         return $this->items;
     }
 
-    public function current(): CartProductInterface
+    public function current(): CartItemInterface
     {
         return current($this->items);
     }
 
-    public function next(): CartProductInterface
+    public function next()
     {
         return next($this->items);
     }
 
-    public function key()
+    public function key(): string
     {
         return key($this->items);
     }
 
-    public function valid()
+    public function valid(): bool
     {
         $key = key($this->items);
         return ($key !== NULL && $key !== FALSE);
