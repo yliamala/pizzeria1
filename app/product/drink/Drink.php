@@ -2,15 +2,9 @@
 
 namespace App\Product\Drink;
 
-use app\order\CartProductInterface;
-use app\order\NameAble;
-use app\product\InterfaceProduct;
-
-// @todo split to files
-interface BottleInterface
-{
-    public function getVolume(): float;
-}
+use App\Order\CartProductInterface;
+use App\Order\NameAble;
+use App\Product\InterfaceProduct;
 
 class Drink implements InterfaceProduct, NameAble, CartProductInterface, BottleInterface
 {
