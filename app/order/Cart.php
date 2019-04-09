@@ -1,7 +1,6 @@
 <?php
 
 namespace App\Order;
-// @todo change all namespaces to CamelCase and name of files
 
 class Cart implements CartInterface
 {
@@ -47,27 +46,28 @@ class Cart implements CartInterface
 
     public function current(): CartProductInterface
     {
-        // TODO: Implement valid() method.
+        return current($this->items);
     }
 
     public function next(): CartProductInterface
     {
-        // TODO: Implement valid() method.
+        return next($this->items);
     }
 
     public function key()
     {
-        // TODO: Implement valid() method.
+        return key($this->items);
     }
 
     public function valid()
     {
-        // TODO: Implement valid() method.
+        $key = key($this->items);
+        return ($key !== NULL && $key !== FALSE);
     }
 
     public function rewind()
     {
-        // TODO: Implement rewind() method.
+        reset($this->items);
     }
 
 }
