@@ -1,6 +1,5 @@
 <?php
 
-// @todo make analog to other products
 namespace App\Product\Drink;
 
 
