@@ -3,7 +3,7 @@
 namespace App\Product\Burger;
 
 
-class PriceBurger
+class DefaultPrice implements BurgerPriceStrategyInterface
 {
     private $price = 80;
     private $burger;

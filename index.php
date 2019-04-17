@@ -7,7 +7,7 @@ try {
     $pizza->addIngredient(new \App\Product\pizza\Ingredient('onions'));
     $pizza->addIngredient(new \App\Product\pizza\Ingredient('olives'));
 
-    $burger = new \App\Product\burger\Burger('white', 'well done');
+    $burger = new \App\Product\burger\Burger(new \App\Product\Burger\StrategyFactory(),'white', 'well done');
     $burger->addCheese()->addDoubleCutlet();
 
     $drink = new \App\Product\Drink\Drink(new \App\Product\Drink\StrategyFactory(),'coca-cola', 1);

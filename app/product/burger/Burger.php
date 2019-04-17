@@ -2,9 +2,9 @@
 
 namespace App\Product\Burger;
 
-use app\order\CartProductInterface;
-use app\order\NameAble;
-use app\product\InterfaceProduct;
+use App\Order\CartProductInterface;
+use App\Order\NameAble;
+use App\Product\InterfaceProduct;
 
 class Burger implements InterfaceProduct, NameAble, CartProductInterface
 {
@@ -13,11 +13,13 @@ class Burger implements InterfaceProduct, NameAble, CartProductInterface
     private $cheese = false;
     private $doubleCutlet = false;
     private $type = InterfaceProduct::ADDITIONAL_PRODUCT_TYPE;
+    private $price;
 
-    public function __construct($bun, $degreeRoasting)
+    public function __construct(StrategyFactoryInterface $strategyBuilder, $bun, $degreeRoasting)
     {
         $this->bun = $bun;
         $this->degreeRoasting = $degreeRoasting;
+        $this->price = $strategyBuilder->getStrategy($this);
     }
 
     public function getCheese()
@@ -64,7 +66,7 @@ class Burger implements InterfaceProduct, NameAble, CartProductInterface
 
     public function getPrice()
     {
-        return (new PriceBurger($this))->getPrice();
+        return $this->price->getPrice();
     }
 
     public function getWeight()
