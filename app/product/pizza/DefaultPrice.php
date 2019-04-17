@@ -2,7 +2,7 @@
 namespace App\Product\Pizza;
 
 
-class PricePizza
+class DefaultPrice implements PizzaPriceStrategyInterface
 {
     private $price = 0;
     private $pizza;
@@ -15,7 +15,7 @@ class PricePizza
         $this->setIngredientPrice();
     }
 
-    public function getPrice()
+    public function getPrice(): float
     {
         return $this->price;
     }

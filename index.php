@@ -3,7 +3,7 @@
 require_once('autoloader.php');
 try {
     // Create product
-    $pizza = new \App\Product\pizza\Pizza('standard', 26);
+    $pizza = new \App\Product\pizza\Pizza(new \App\Product\Pizza\StrategyFactory(), 'standard', 26);
     $pizza->addIngredient(new \App\Product\pizza\Ingredient('onions'));
     $pizza->addIngredient(new \App\Product\pizza\Ingredient('olives'));
 

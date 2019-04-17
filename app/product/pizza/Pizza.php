@@ -13,11 +13,13 @@ class Pizza implements InterfaceProduct, NameAble, CartProductInterface
     private $size;
     private $ingredient;
     private $type = InterfaceProduct::UNIQUE_PRODUCT_TYPE;
+    private $price;
 
-    public function __construct($dough, $size)
+    public function __construct(StrategyFactoryInterface $strategyBuilder, $dough, $size)
     {
         $this->dough = $dough;
         $this->size = $size;
+        $this->price = $strategyBuilder->getStrategy($this);
     }
 
     public function addIngredient(Ingredient $ingredient)
@@ -42,7 +44,7 @@ class Pizza implements InterfaceProduct, NameAble, CartProductInterface
 
     public function getPrice()
     {
-        return (new PricePizza($this))->getPrice();
+        return (new DefaultPrice($this))->getPrice();
     }
 
     public function getWeight()
