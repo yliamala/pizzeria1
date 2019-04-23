@@ -3,7 +3,8 @@
 namespace App\Order;
 
 use App\Order\Discount\DiscountStrategyInterface;
-use app\order\payment\AbstractPayment;
+use App\Order\Payment\PaymentInterface;
+use App\User\Customer\CustomerInterface;
 use app\user\Employee;
 
 class Order
@@ -17,11 +18,13 @@ class Order
      */
     private $cart;
     private $pizzeria;
+    /**
+     * @var PaymentInterface
+     */
     private $payment;
     private $status = self::SUBMITTED_STATUS;
     private $cook;
     private $manager;
-    private $discount = 0;
     private $paid = false;
 
     private $discountStrategy;
@@ -57,9 +60,11 @@ class Order
         return $this->pizzeria;
     }
 
-    public function setPayment(AbstractPayment $pay)
+    public function setPayment(PaymentInterface $pay, CustomerInterface $customer)
     {
-        $pay->enable($this);
+        if (!$pay->enable($this, $customer)) {
+            throw new \Exception('You can not pay cash.');
+        }
         $this->payment = $pay;
     }
 

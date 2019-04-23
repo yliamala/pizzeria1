@@ -4,13 +4,11 @@ namespace App\Product\Drink;
 
 use App\Order\CartProductInterface;
 use App\Order\NameAble;
-use App\Product\InterfaceProduct;
 
-class Drink implements InterfaceProduct, NameAble, CartProductInterface, BottleInterface
+class Drink implements NameAble, CartProductInterface, BottleInterface
 {
     private $volume;
     private $name;
-    private $type = InterfaceProduct::BASIC_PRODUCT_TYPE;
     private $drinkPrice;
 
     public function __construct(StrategyFactoryInterface $strategyBuilder, string $name, float $volume)
@@ -38,11 +36,6 @@ class Drink implements InterfaceProduct, NameAble, CartProductInterface, BottleI
     public function getDescription()
     {
         return $this->getName() . ' ' . $this->getVolume() . ' l .';
-    }
-
-    public function getType()
-    {
-        return $this->type;
     }
 
     public function getHash()

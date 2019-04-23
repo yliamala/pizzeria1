@@ -3,28 +3,24 @@
 namespace App\Order;
 
 
-use app\user\Customer;
+
+use App\User\Customer\CustomerInterface;
 
 class ValidationMinTotal implements ValidationInterface
 {
     private $order;
     private $customer;
-    private $minTotalAmount = 700;
-    private $minTotalCustomer = [Customer::VIP => 500];
 
-    public function __construct(Order $order, Customer $customer)
+    public function __construct(Order $order, CustomerInterface $customer)
     {
         $this->order = $order;
         $this->customer = $customer;
     }
     
-    private function validTotalAmount()
+    private function validTotalAmount(): bool
     {
-        if (!empty($this->minTotalCustomer[$this->customer->getType()])) {
-            $this->minTotalAmount = $this->minTotalCustomer[$this->customer->getType()];
-        }
-        if ($this->order->getTotalAmount() < $this->minTotalAmount) {
-            throw new \Exception('Minimum order amount ' . $this->minTotalAmount);
+        if ($this->customer->getMinAmountOrder() > $this->order->getTotalAmount()) {
+            throw new \Exception('Minimum order amount ' . $this->customer->getMinAmountOrder());
         }
         return true;
     }

@@ -17,27 +17,21 @@ try {
 
 // Add product
     $cart->addItem($pizza, 4);
-    $cart->addItem($burger);
+    $cart->addItem($burger,5);
     $cart->addItem($drink);
 
-//print_r($order);
-// Delete product example
-//$items = $cart->getItems();
-//$keys = array_keys($items);
-//$firstKey = $keys[0];
-//$cart->deleteProduct($cart->key());
-//print_r($order);
     (new \App\Order\PrintCart($cart))->printCart();
 
 // Get address pizzeria
     echo 'Select Pizzeria: ' . "\n";
     print_r(\App\pizzeria\Pizzeria::getPizzeriaList());
 
+    $customer = new \App\User\Customer\Vip('Julia', '09872227733');
 // Create Order
     $order = new \App\Order\Order($cart, new \App\Order\Discount\DefaultStrategy());
-    $order->setPizzeria(new \App\pizzeria\Pizzeria('City', true));
+    $order->setPizzeria(new \App\Pizzeria\Pizzeria('City', true));
     $payment = new \App\Order\Payment\Cash($order);
-    $order->setPayment($payment);
+    $order->setPayment($payment, $customer);
 
     $cook = new \App\user\Cook('Piter');
     $order->setCook($cook);
@@ -55,15 +49,18 @@ try {
     echo 'Total amount: ' . $order->getTotalAmount() . "\n";
 
 // Save order
-    $vip = new \App\user\Vip('Julia', '09872227733');
-    (new \App\Order\SaveOrder($order, new \App\Order\ValidationMinTotal($order, $vip)))->save();
+    (new \App\Order\SaveOrder($order, new \App\Order\ValidationMinTotal($order, $customer)))->save();
     new \App\Order\SendEmail($order);
 
 
     $order->changeStatus($cook, \App\Order\Order::CONFIRMED_STATUS);
     $order->changeStatus($manager, \App\Order\Order::DELIVERED_STATUS);
-    $vip->viewCurrentStatusOrder();
-    $vip->viewHistoryOrder();
+    $res = \App\User\ACL::checkPermission(new \App\User\Customer\Permission\ViewHistoryOrder(), $customer);
+    echo 'ViewHistoryOrder - ';
+    var_dump($res);
+    $res = \App\User\ACL::checkPermission(new \App\User\Customer\Permission\ViewStatusCurrentOrder(), $customer);
+    echo 'ViewStatusCurrentOrder - ';
+    var_dump($res);
 
 // Paid order
     $order->setPaid($manager);

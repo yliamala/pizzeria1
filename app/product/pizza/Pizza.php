@@ -4,15 +4,12 @@ namespace App\Product\Pizza;
 
 use app\order\CartProductInterface;
 use app\order\NameAble;
-use app\order\PriceAble;
-use app\product\InterfaceProduct;
 
-class Pizza implements InterfaceProduct, NameAble, CartProductInterface
+class Pizza implements NameAble, CartProductInterface
 {
     private $dough;
     private $size;
     private $ingredient;
-    private $type = InterfaceProduct::UNIQUE_PRODUCT_TYPE;
     private $price;
 
     public function __construct(StrategyFactoryInterface $strategyBuilder, $dough, $size)
@@ -65,11 +62,6 @@ class Pizza implements InterfaceProduct, NameAble, CartProductInterface
         $description .= '.';
 
         return $description;
-    }
-
-    public function getType()
-    {
-        return $this->type;
     }
 
     public function getName()

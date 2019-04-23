@@ -3,22 +3,28 @@
 namespace App\Order\Payment;
 
 
-use app\order\Order;
-use app\user\Vip;
+use App\Order\Order;
+use App\User\Customer\CustomerInterface;
+use App\User\Customer\Vip;
 
-class Cash extends AbstractPayment
+class Cash implements PaymentInterface
 {
     const MAX_AMOUNT = 5000;
 
-    protected $name = 'cash';
-    protected $setPaid = true;
-
-    public function enable(Order $order)
+    public function enable(Order $order, CustomerInterface $customer): bool
     {
-        $customer = new Vip('Test', '09872227733');
-        if ($order->getTotalAmount() >= self::MAX_AMOUNT && !$customer->getAlwaysCash()) {
-            return false;
+        if ($customer instanceof Vip) {
+            return true;
         }
+
+        if ($order->getTotalAmount() >= self::MAX_AMOUNT) {
+            return true;
+        }
+        return false;
+    }
+
+    public function getSetPaid(): bool
+    {
         return true;
     }
 }
