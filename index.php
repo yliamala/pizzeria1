@@ -20,6 +20,10 @@ try {
     $cart->addItem($burger,5);
     $cart->addItem($drink);
 
+// Add service
+    $holidayParty = new \App\Service\HolidayParty('2019-03-24', 3, 'street', '0984777332');
+    $cart->addItem($holidayParty);
+
     (new \App\Order\PrintCart($cart))->printCart();
 
 // Get address pizzeria

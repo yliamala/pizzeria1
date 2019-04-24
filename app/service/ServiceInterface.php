@@ -2,9 +2,10 @@
 
 namespace App\Service;
 
-interface ServiceInterface
-{
-    public function getPrice();
+use App\Order\CartProductInterface;
+use App\Order\NameAble;
 
-    public function getDescription();
+interface ServiceInterface extends CartProductInterface, NameAble
+{
+    public function getQtyPeople(): int;
 }
