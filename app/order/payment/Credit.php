@@ -12,9 +12,4 @@ class Credit implements PaymentInterface
     {
         return true;
     }
-
-    public function getSetPaid(): bool
-    {
-        return false;
-    }
 }

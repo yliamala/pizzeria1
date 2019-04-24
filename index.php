@@ -33,9 +33,9 @@ try {
     $payment = new \App\Order\Payment\Cash($order);
     $order->setPayment($payment, $customer);
 
-    $cook = new \App\user\Cook('Piter');
+    $cook = new \App\User\Employee\Cook('Piter');
     $order->setCook($cook);
-    $manager = new \App\user\Manager('Michel');
+    $manager = new \App\User\Employee\Manager('Michel');
     $order->setManager($manager);
 
     $surprise = new \App\Order\SurpriseStrategy($order);
@@ -53,18 +53,18 @@ try {
     new \App\Order\SendEmail($order);
 
 
-    $order->changeStatus($cook, \App\Order\Order::CONFIRMED_STATUS);
-    $order->changeStatus($manager, \App\Order\Order::DELIVERED_STATUS);
-    $res = \App\User\ACL::checkPermission(new \App\User\Customer\Permission\ViewHistoryOrder(), $customer);
-    echo 'ViewHistoryOrder - ';
-    var_dump($res);
-    $res = \App\User\ACL::checkPermission(new \App\User\Customer\Permission\ViewStatusCurrentOrder(), $customer);
-    echo 'ViewStatusCurrentOrder - ';
-    var_dump($res);
+    echo 'Статус ордера: ' . $order->getStatus() . "\n";
+    $order->changeStatus(\App\Order\Order::READY_STATUS, $cook);
+    echo 'Статус ордера: ' . $order->getStatus() . "\n";
+    $order->changeStatus(\App\Order\Order::PAID_STATUS, $manager);
+    echo 'Статус ордера: ' . $order->getStatus() . "\n";
+    $order->changeStatus(\App\Order\Order::DELIVERED_STATUS, $manager);
+    echo 'Статус ордера: ' . $order->getStatus() . "\n";
 
-// Paid order
-    $order->setPaid($manager);
-//print_r($order);exit;
+    $res = \App\User\ACL::checkPermission(new \App\User\Customer\Permission\ViewHistoryOrder(), $customer);
+    echo 'ViewHistoryOrder - '; var_dump($res);
+    $res = \App\User\ACL::checkPermission(new \App\User\Customer\Permission\ViewStatusCurrentOrder(), $customer);
+    echo 'ViewStatusCurrentOrder - '; var_dump($res);
 
 // Service
     $service = new \App\service\HolidayParty('2019-03-24', 3, 'street', '0984777332');

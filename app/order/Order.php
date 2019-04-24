@@ -4,14 +4,18 @@ namespace App\Order;
 
 use App\Order\Discount\DiscountStrategyInterface;
 use App\Order\Payment\PaymentInterface;
+use App\User\ACL;
 use App\User\Customer\CustomerInterface;
 use app\user\Employee;
+use App\User\Employee\EmployeeInterface;
 
 class Order
 {
-    const SUBMITTED_STATUS = 1;
-    const CONFIRMED_STATUS = 2;
-    const DELIVERED_STATUS = 3;
+    const SUBMITTED_STATUS = 1; // принят
+    const READY_STATUS = 2; // приготовлен
+    const PAID_STATUS = 3; // оплачен
+    const DELIVERED_STATUS = 4; // отдан
+
 
     /**
      * @var Cart
@@ -25,7 +29,6 @@ class Order
     private $status = self::SUBMITTED_STATUS;
     private $cook;
     private $manager;
-    private $paid = false;
 
     private $discountStrategy;
 
@@ -68,6 +71,11 @@ class Order
         $this->payment = $pay;
     }
 
+    public function getPayment()
+    {
+        return $this->payment;
+    }
+
     public function getCart()
     {
         return $this->cart;
@@ -75,7 +83,22 @@ class Order
 
     public function getStatus()
     {
-        return $this->status;
+        $status = '';
+        switch ($this->status) {
+            case 1:
+                $status = 'Создан';
+                break;
+            case 2:
+                $status = 'Приготовлен';
+                break;
+            case 3:
+                $status = 'Оплачен';
+                break;
+            case 4:
+                $status = 'Закрыт';
+                break;
+        }
+        return $status;
     }
 
     public function setStatus($status)
@@ -103,28 +126,10 @@ class Order
         return $this->manager;
     }
 
-    public function getPaid()
+    public function changeStatus($status, EmployeeInterface $employee)
     {
-        return $this->paid;
-    }
 
-    public function setPaid(Employee $employee)
-    {
-        if (!$this->payment->getSetPaid()) {
-            throw new \Exception('For cash only.');
-        }
-        if (!$employee->getAllowPaid()) {
-            throw new \Exception('You can not pay the order.');
-        }
-
-        $this->paid = true;
-    }
-
-    public function changeStatus(Employee $employee, $status)
-    {
-        // @todo change to state machine pattern with ACL
-        if (!(($employee->getConfirmedOrder() && $status == self::CONFIRMED_STATUS) ||
-            ($employee->getDeliveredOrder() && $status == self::DELIVERED_STATUS))) {
+        if (!(ACL::checkStatus($status, $employee, $this))) {
             throw new \Exception('You can not change status.');
         }
 

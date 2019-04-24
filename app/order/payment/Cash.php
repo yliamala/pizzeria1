@@ -22,9 +22,4 @@ class Cash implements PaymentInterface
         }
         return false;
     }
-
-    public function getSetPaid(): bool
-    {
-        return true;
-    }
 }

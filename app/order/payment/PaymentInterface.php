@@ -10,6 +10,4 @@ interface PaymentInterface
 {
 
     public function enable(Order $order, CustomerInterface $customer): bool;
-
-    public function getSetPaid(): bool;
 }
