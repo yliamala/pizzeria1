@@ -5,5 +5,5 @@ namespace App\Order;
 
 interface PriceAble
 {
-    public function getPrice();
+    public function getPrice(): float;
 }

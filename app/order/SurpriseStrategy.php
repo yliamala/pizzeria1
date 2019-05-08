@@ -15,15 +15,15 @@ class SurpriseStrategy
         $this->setSurprise();
     }
 
-    public function getDiscount()
-    {
-        return $this->surprise;
-    }
-
     public function setSurprise()
     {
         if ($this->order->getTotalAmount() >= $this->maxAmount) {
             $this->surprise = true;
         }
+    }
+
+    public function getDiscount()
+    {
+        return $this->surprise;
     }
 }

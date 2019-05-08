@@ -2,7 +2,6 @@
 
 namespace App\Service;
 
-
 class HolidayParty implements ServiceInterface
 {
     protected $date;
@@ -27,14 +26,12 @@ class HolidayParty implements ServiceInterface
         return $this->qtyPeople;
     }
 
-
-
     public function getHash()
     {
         return uniqid();
     }
 
-    public function getPrice()
+    public function getPrice(): float
     {
         return (new DefaultPrice())->getPrice($this);
     }

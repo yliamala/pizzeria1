@@ -2,10 +2,10 @@
 
 namespace App\Product\Drink;
 
-use App\Order\CartProductInterface;
+use App\Order\Cart\ProductInterface;
 use App\Order\NameAble;
 
-class Drink implements NameAble, CartProductInterface, BottleInterface
+class Drink implements NameAble, ProductInterface, BottleInterface
 {
     private $volume;
     private $name;
@@ -18,6 +18,16 @@ class Drink implements NameAble, CartProductInterface, BottleInterface
         $this->drinkPrice = $strategyBuilder->getStrategy($this);
     }
 
+    public function getPrice(): float
+    {
+        return $this->drinkPrice->getPrice();
+    }
+
+    public function getDescription()
+    {
+        return $this->getName() . ' ' . $this->getVolume() . ' l .';
+    }
+
     public function getName()
     {
         return $this->name;
@@ -26,16 +36,6 @@ class Drink implements NameAble, CartProductInterface, BottleInterface
     public function getVolume(): float
     {
         return $this->volume;
-    }
-
-    public function getPrice()
-    {
-        return $this->drinkPrice->getPrice();
-    }
-
-    public function getDescription()
-    {
-        return $this->getName() . ' ' . $this->getVolume() . ' l .';
     }
 
     public function getHash()

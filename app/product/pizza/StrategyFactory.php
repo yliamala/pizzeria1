@@ -5,7 +5,7 @@ namespace App\Product\Pizza;
 
 class StrategyFactory implements StrategyFactoryInterface
 {
-    public function getStrategy(Pizza $pizza): PizzaPriceStrategyInterface
+    public function getStrategy(Pizza $pizza): PriceStrategyInterface
     {
         return new DefaultPrice($pizza);
     }

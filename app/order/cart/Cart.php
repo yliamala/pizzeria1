@@ -1,22 +1,37 @@
 <?php
 
-namespace App\Order;
+namespace App\Order\Cart;
+
+use App\Order\Cart\Item\Item;
+use App\Order\Cart\Item\ItemInterface;
+use App\Order\Cart\Item\ItemSumStrategyFactory;
+use App\Order\Cart\Item\ItemSumStrategyFactoryInterface;
 
 class Cart implements CartInterface
 {
     private $totalAmount = 0;
-    /** @var CartItem[] */
+    /** @var Item[] */
     private $items = [];
+    /** @var ItemSumStrategyFactoryInterface */
+    private $cartItemSumStrategyFactory;
 
-    public function addItem(CartProductInterface $cartProduct, float $qty = 1): self
+    public function __construct()
     {
-        $this->items[$cartProduct->getHash()] = new CartItem($cartProduct, $qty);
-        $this->totalAmount += $cartProduct->getPrice() * $qty;
+        $this->cartItemSumStrategyFactory = new ItemSumStrategyFactory();
+    }
+
+
+    public function addItem(ProductInterface $cartProduct, float $qty = 1): self
+    {
+        $surpriseStrategy = $this->cartItemSumStrategyFactory->getStrategy($this);
+        $cartItem = new Item($cartProduct, $qty, $surpriseStrategy);
+        $this->items[$cartProduct->getHash()] = $cartItem;
+        $this->totalAmount += $cartItem->getSum();
 
         return $this;
     }
 
-    public function removeItem(CartProductInterface $cartItem)
+    public function removeItem(ProductInterface $cartItem)
     {
         unset($this->items[$cartItem->getHash()]);
         $this->reCalculateTotalAmount();
@@ -44,7 +59,7 @@ class Cart implements CartInterface
         return $this->items;
     }
 
-    public function current(): CartItemInterface
+    public function current(): ItemInterface
     {
         return current($this->items);
     }

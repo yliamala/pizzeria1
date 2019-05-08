@@ -1,23 +1,25 @@
 <?php
 
 require_once('autoloader.php');
+
 try {
-    // Create product
-    $pizza = new \App\Product\pizza\Pizza(new \App\Product\Pizza\StrategyFactory(), 'standard', 26);
+// Create product
+    $pizza = new \App\Product\pizza\Pizza(new \App\Product\Pizza\StrategyFactory(), \App\Product\Pizza\Pizza::DOUGH_STANDARD, 26);
     $pizza->addIngredient(new \App\Product\pizza\Ingredient('onions'));
     $pizza->addIngredient(new \App\Product\pizza\Ingredient('olives'));
 
-    $burger = new \App\Product\burger\Burger(new \App\Product\Burger\StrategyFactory(),'white', 'well done');
+    $burger = new \App\Product\burger\Burger(new \App\Product\Burger\StrategyFactory(), 'white', 'well done');
     $burger->addCheese()->addDoubleCutlet();
+    $drinkStrategy = new \App\Product\Drink\DefaultStrategyFactory();
+    $freeDrinkStrategy = new \App\Product\Drink\FreeStrategyFactory();
 
-    $drink = new \App\Product\Drink\Drink(new \App\Product\Drink\StrategyFactory(),'coca-cola', 1);
-
+    $drink = new \App\Product\Drink\Drink($drinkStrategy, 'coca-cola', 1);
 // Create cart
-    $cart = new \App\Order\Cart();
+    $cart = new \App\Order\Cart\Cart();
 
 // Add product
     $cart->addItem($pizza, 4);
-    $cart->addItem($burger,5);
+    $cart->addItem($burger, 5);
     $cart->addItem($drink);
 
 // Add service
@@ -42,14 +44,16 @@ try {
     $manager = new \App\User\Employee\Manager('Michel');
     $order->setManager($manager);
 
+
     $surprise = new \App\Order\SurpriseStrategy($order);
     if ($surprise) {
-        $drink = new \App\Product\Drink\Drink(new \App\Product\Drink\FreeStrategyFactory(), 'coca-cola', 0.5);
+        $drink = new \App\Product\Drink\Drink($freeDrinkStrategy, 'coca-cola', 0.5);
         $order->getCart()->addItem($drink);
     }
 
+
     echo 'Sub Total amount: ' . $order->getSubTotalAmount() . "\n";
-    echo 'Discount: -' . ($order->getDiscount()/100) * $order->getSubTotalAmount() . "\n";
+    echo 'Discount: -' . ($order->getDiscount() / 100) * $order->getSubTotalAmount() . "\n";
     echo 'Total amount: ' . $order->getTotalAmount() . "\n";
 
 // Save order
@@ -66,9 +70,11 @@ try {
     echo 'Статус ордера: ' . $order->getStatus() . "\n";
 
     $res = \App\User\ACL::checkPermission(new \App\User\Customer\Permission\ViewHistoryOrder(), $customer);
-    echo 'ViewHistoryOrder - '; var_dump($res);
+    echo 'ViewHistoryOrder - ';
+    var_dump($res);
     $res = \App\User\ACL::checkPermission(new \App\User\Customer\Permission\ViewStatusCurrentOrder(), $customer);
-    echo 'ViewStatusCurrentOrder - '; var_dump($res);
+    echo 'ViewStatusCurrentOrder - ';
+    var_dump($res);
 
 // Service
     $service = new \App\service\HolidayParty('2019-03-24', 3, 'street', '0984777332');

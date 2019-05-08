@@ -2,11 +2,11 @@
 
 namespace App\Order;
 
+use App\Order\Cart\Cart;
 use App\Order\Discount\DiscountStrategyInterface;
 use App\Order\Payment\PaymentInterface;
 use App\User\ACL;
 use App\User\Customer\CustomerInterface;
-use app\user\Employee;
 use App\User\Employee\EmployeeInterface;
 
 class Order
@@ -53,14 +53,19 @@ class Order
         return ($this->cart->getTotalSum() - ($this->cart->getTotalSum() * $this->discountStrategy->getDiscount() / 100));
     }
 
+    public function getPizzeria()
+    {
+        return $this->pizzeria;
+    }
+
     public function setPizzeria($pizzeria)
     {
         $this->pizzeria = $pizzeria;
     }
 
-    public function getPizzeria()
+    public function getPayment()
     {
-        return $this->pizzeria;
+        return $this->payment;
     }
 
     public function setPayment(PaymentInterface $pay, CustomerInterface $customer)
@@ -69,11 +74,6 @@ class Order
             throw new \Exception('You can not pay cash.');
         }
         $this->payment = $pay;
-    }
-
-    public function getPayment()
-    {
-        return $this->payment;
     }
 
     public function getCart()
@@ -106,24 +106,24 @@ class Order
         $this->status = $status;
     }
 
-    public function setCook($cook)
-    {
-        $this->cook = $cook;
-    }
-
     public function getCook()
     {
         return $this->cook;
     }
 
-    public function setManager($manager)
+    public function setCook($cook)
     {
-        $this->manager = $manager;
+        $this->cook = $cook;
     }
 
     public function getManager()
     {
         return $this->manager;
+    }
+
+    public function setManager($manager)
+    {
+        $this->manager = $manager;
     }
 
     public function changeStatus($status, EmployeeInterface $employee)
