@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Product\Pizza;
 
 
@@ -21,21 +22,6 @@ class WeightPizza
         return $this->weight;
     }
 
-    private function addWeightByDough()
-    {
-        switch ($this->pizza->getDough()) {
-            case 'standard':
-                $this->weight += 50;
-                break;
-            case 'thin':
-                $this->weight += 30;
-                break;
-            default:
-                throw new \Exception($this->pizza->getDough() . ' dough is not exist.');
-                break;
-        }
-    }
-
     private function addWeightBySize()
     {
         switch ($this->pizza->getSize()) {
@@ -47,6 +33,21 @@ class WeightPizza
                 break;
             case 40:
                 $this->weight += 40;
+                break;
+        }
+    }
+
+    private function addWeightByDough()
+    {
+        switch ($this->pizza->getDough()) {
+            case 'standard':
+                $this->weight += 50;
+                break;
+            case 'thin':
+                $this->weight += 30;
+                break;
+            default:
+                throw new \Exception($this->pizza->getDough() . ' dough is not exist.');
                 break;
         }
     }

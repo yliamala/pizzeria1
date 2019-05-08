@@ -2,6 +2,9 @@
 
 namespace App\Order;
 
+use App\Order\Cart\Cart;
+use App\Order\Cart\Item\Item;
+
 class PrintCart
 {
     /**

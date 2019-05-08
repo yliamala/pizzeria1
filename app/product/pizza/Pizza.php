@@ -2,21 +2,24 @@
 
 namespace App\Product\Pizza;
 
-use app\order\CartProductInterface;
+use app\Order\Cart\ProductInterface;
 use app\order\NameAble;
 
-class Pizza implements NameAble, CartProductInterface
+class Pizza implements NameAble, ProductInterface
 {
+    CONST DOUGH_STANDARD = 'standard';
+    CONST DOUGH_THIN = 'thin';
+
     private $dough;
     private $size;
     private $ingredient;
-    private $price;
+    private $priceStrategy;
 
     public function __construct(StrategyFactoryInterface $strategyBuilder, $dough, $size)
     {
         $this->dough = $dough;
         $this->size = $size;
-        $this->price = $strategyBuilder->getStrategy($this);
+        $this->priceStrategy = $strategyBuilder->getStrategy($this);
     }
 
     public function addIngredient(Ingredient $ingredient)
@@ -24,24 +27,9 @@ class Pizza implements NameAble, CartProductInterface
         $this->ingredient[] = $ingredient;
     }
 
-    public function getDough()
+    public function getPrice(): float
     {
-        return $this->dough;
-    }
-
-    public function getSize()
-    {
-        return $this->size;
-    }
-
-    public function getIngredient()
-    {
-        return $this->ingredient;
-    }
-
-    public function getPrice()
-    {
-        return (new DefaultPrice($this))->getPrice();
+        return $this->priceStrategy->getPrice();
     }
 
     public function getWeight()
@@ -62,6 +50,21 @@ class Pizza implements NameAble, CartProductInterface
         $description .= '.';
 
         return $description;
+    }
+
+    public function getDough()
+    {
+        return $this->dough;
+    }
+
+    public function getSize()
+    {
+        return $this->size;
+    }
+
+    public function getIngredient()
+    {
+        return $this->ingredient;
     }
 
     public function getName()

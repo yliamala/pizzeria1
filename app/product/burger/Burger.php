@@ -2,10 +2,10 @@
 
 namespace App\Product\Burger;
 
-use App\Order\CartProductInterface;
+use App\Order\Cart\ProductInterface;
 use App\Order\NameAble;
 
-class Burger implements NameAble, CartProductInterface
+class Burger implements NameAble, ProductInterface
 {
     private $bun;
     private $degreeRoasting;
@@ -20,11 +20,6 @@ class Burger implements NameAble, CartProductInterface
         $this->price = $strategyBuilder->getStrategy($this);
     }
 
-    public function getCheese()
-    {
-        return $this->cheese;
-    }
-
     public function addCheese()
     {
         $this->cheese = true;
@@ -34,21 +29,6 @@ class Burger implements NameAble, CartProductInterface
     public function removeCheese()
     {
         return $this->cheese = false;
-    }
-
-    public function getDoubleCutlet()
-    {
-        return $this->doubleCutlet;
-    }
-
-    public function getBun()
-    {
-        return $this->bun;
-    }
-
-    public function getDegreeRoasting()
-    {
-        return $this->degreeRoasting;
     }
 
     public function addDoubleCutlet()
@@ -62,7 +42,7 @@ class Burger implements NameAble, CartProductInterface
         $this->doubleCutlet = false;
     }
 
-    public function getPrice()
+    public function getPrice(): float
     {
         return $this->price->getPrice();
     }
@@ -74,11 +54,31 @@ class Burger implements NameAble, CartProductInterface
 
     public function getDescription()
     {
-        $description = 'Burger with ' . $this->getBun() . ' bun, ' ;
+        $description = 'Burger with ' . $this->getBun() . ' bun, ';
         if ($this->getDoubleCutlet()) $description .= 'double ';
         $description .= 'cutlet ' . $this->getDegreeRoasting() . ' roasting ';
         if ($this->getCheese()) $description .= 'with cheese';
         return $description;
+    }
+
+    public function getBun()
+    {
+        return $this->bun;
+    }
+
+    public function getDoubleCutlet()
+    {
+        return $this->doubleCutlet;
+    }
+
+    public function getDegreeRoasting()
+    {
+        return $this->degreeRoasting;
+    }
+
+    public function getCheese()
+    {
+        return $this->cheese;
     }
 
     public function getName()

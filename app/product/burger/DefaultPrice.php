@@ -15,11 +15,6 @@ class DefaultPrice implements BurgerPriceStrategyInterface
         $this->setPriceByDoubleCutlet();
     }
 
-    public function getPrice()
-    {
-        return $this->price;
-    }
-
     private function setPriceByCheese()
     {
         if ($this->burger->getCheese()) {
@@ -32,5 +27,10 @@ class DefaultPrice implements BurgerPriceStrategyInterface
         if ($this->burger->getDoubleCutlet()) {
             $this->price += 30;
         }
+    }
+
+    public function getPrice()
+    {
+        return $this->price;
     }
 }

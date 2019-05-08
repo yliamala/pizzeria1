@@ -1,7 +1,6 @@
 <?php
 
-namespace App\Order;
-
+namespace App\Order\Cart;
 
 interface HashAble
 {

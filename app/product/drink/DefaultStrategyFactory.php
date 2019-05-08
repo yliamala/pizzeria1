@@ -3,7 +3,7 @@
 namespace App\Product\Drink;
 
 
-class StrategyFactory implements StrategyFactoryInterface
+class DefaultStrategyFactory implements StrategyFactoryInterface
 {
     public function getStrategy(Drink $drink): DrinkPriceStrategyInterface
     {

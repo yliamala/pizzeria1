@@ -3,7 +3,7 @@
 namespace App\Product\Pizza;
 
 
-interface PriceStrategyInterface
+interface PriceStrategyInterface extends \App\Product\PriceStrategyInterface
 {
-    public function getPrice(): float;
+    public function __construct(Pizza $pizza);
 }

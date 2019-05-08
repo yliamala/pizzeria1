@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Product\Drink;
+namespace App\Product;
 
 
 interface PriceStrategyInterface
